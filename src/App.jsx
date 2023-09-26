@@ -32,7 +32,7 @@ const App = () => {
     }
   };
   return (
-    <div className="App">
+    <div className="flex flex-1 flex-col items-center p-2">
         <Banner title={schedule.title} />
         <CourseList courses={schedule.courses}/>
     </div>
