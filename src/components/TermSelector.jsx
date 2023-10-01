@@ -2,9 +2,9 @@ import { useState } from "react";
 import CourseList from './CourseList';
 
 const terms = {
-  Fall: 'Breakfast items...',
-  Winter: 'Lunch items...',
-  Spring: 'Dinner items...'
+  Fall: 'fall',
+  Winter: 'winter',
+  Spring: 'spring'
 };
 
 const MenuButton = ({term, selection, setSelection}) => (
