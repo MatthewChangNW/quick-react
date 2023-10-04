@@ -25,13 +25,29 @@ const MenuSelector = ({selection, setSelection}) => (
   </div>
 );
 
-const Menu = ({selection, courses}) => (
-  <div className="card" >
-    <CourseList courses={courses} term={selection} />
-  </div>
-);
+const Menu = ({selection, courses}) => {
+    const [selected, setSelected] = useState([]);
+
+    const toggleSelected = (item) => {
+        if (selected.includes(item)) {
+            setSelected(selected.filter(x => x !== item));
+            return;
+        }
+        else {
+            setSelected([...selected, item]);
+            return;
+        }
+    };
+    return (
+        <div className="card" >
+            <CourseList courses={courses} term={selection} selected={selected} toggleSelected={toggleSelected} />
+        </div>
+    )
+
+    };
 
 const TermSelector = ({courses}) => {
+
   const [selection, setSelection] = useState(() => Object.keys(terms)[0]);
   return (
     <div className='flex flex-col items-center'>
