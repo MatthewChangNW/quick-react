@@ -1,5 +1,6 @@
 import { useState } from "react";
 import CourseList from './CourseList';
+import Modal from "./Modal";
 
 const terms = {
   Fall: 'fall',
@@ -38,21 +39,53 @@ const Menu = ({selection, courses}) => {
             return;
         }
     };
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const openModal = () => {
+      setIsModalOpen(true);
+    };
+  
+    const closeModal = () => {
+      setIsModalOpen(false);
+    };
     return (
-        <div className="card" >
-            <CourseList courses={courses} term={selection} selected={selected} toggleSelected={toggleSelected} />
-        </div>
+
+      <div className="flex flex-col" >
+          <button onClick={openModal} className="rounded-xl px-4 py-2 mb-2 border border-black self-center">
+            Course Plan
+          </button>
+
+          <Modal isOpen={isModalOpen} onClose={closeModal} selection={selection}>
+            {selected.length === 0? 
+              (<p>There are no courses selected. You can click on a course to select it.</p>) :
+              (
+                selected.map(course =>
+                  <div className='border-b'>
+                    <div className='flex flex-row justify-between'>
+                    {course.split(",")[0] + " CS " + course.split(",")[1] + ": " + course.split(",")[2]}
+                    </div>
+                    <div>Meets {course.split(",")[3]}</div>
+                  </div>
+                )
+              )}
+          </Modal>
+          <CourseList courses={courses} term={selection} selected={selected} toggleSelected={toggleSelected} />
+      </div>
     )
 
     };
 
 const TermSelector = ({courses}) => {
 
+
   const [selection, setSelection] = useState(() => Object.keys(terms)[0]);
+
   return (
     <div className='flex flex-col items-center'>
       <MenuSelector selection={selection} setSelection={setSelection} />
       <Menu selection={selection} courses={courses} />
+      
     </div>
   );
 }
