@@ -1,82 +1,84 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CourseList from './CourseList';
 import Modal from "./Modal";
-
+import { hasConflict } from "../utilities/timeConflict";
 const terms = {
   Fall: 'fall',
   Winter: 'winter',
   Spring: 'spring'
 };
 
-const MenuButton = ({term, selection, setSelection}) => (
+const MenuButton = ({ term, selection, setSelection }) => (
   <div>
     <input type="radio" id={term} className="btn-check" checked={term === selection} autoComplete="off"
       onChange={() => setSelection(term)} />
     <label className="btn btn-success mb-1 p-2" htmlFor={term}>
-    { term }
+      {term}
     </label>
   </div>
 );
 
-const MenuSelector = ({selection, setSelection}) => (
+const MenuSelector = ({ selection, setSelection }) => (
   <div className="flex-row flex pb-2">
-    { 
+    {
       Object.keys(terms).map(term => <MenuButton key={term} term={term} selection={selection} setSelection={setSelection} />)
     }
   </div>
 );
 
-const Menu = ({selection, courses}) => {
-    const [selected, setSelected] = useState([]);
+const Menu = ({ selection, courses }) => {
+  const [selected, setSelected] = useState([]);
+  const [conflicting, setConflicting] = useState([]);
 
-    const toggleSelected = (item) => {
-        if (selected.includes(item)) {
-            setSelected(selected.filter(x => x !== item));
-            return;
-        }
-        else {
-            setSelected([...selected, item]);
-            return;
-        }
-    };
+  const toggleSelected = (key) => {
+    if (selected.includes(key)) {
+      setSelected(selected.filter(course => course !== key));
+    } else {
+      setSelected([...selected, key]);
+    }
+  }
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
+  useEffect(() => {
+    setConflicting(hasConflict(Object.values(courses), selected));
+  }, [selected]);
 
-    const openModal = () => {
-      setIsModalOpen(true);
-    };
-  
-    const closeModal = () => {
-      setIsModalOpen(false);
-    };
-    return (
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-      <div className="flex flex-col" >
-          <button onClick={openModal} className="rounded-xl px-4 py-2 mb-2 border border-black self-center">
-            Course Plan
-          </button>
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
 
-          <Modal isOpen={isModalOpen} onClose={closeModal} selection={selection}>
-            {selected.length === 0? 
-              (<p>There are no courses selected. You can click on a course to select it.</p>) :
-              (
-                selected.map(course =>
-                  <div className='border-b'>
-                    <div className='flex flex-row justify-between'>
-                    {course.split(",")[0] + " CS " + course.split(",")[1] + ": " + course.split(",")[2]}
-                    </div>
-                    <div>Meets {course.split(",")[3]}</div>
-                  </div>
-                )
-              )}
-          </Modal>
-          <CourseList courses={courses} term={selection} selected={selected} toggleSelected={toggleSelected} />
-      </div>
-    )
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+  return (
 
-    };
+    <div className="flex flex-col" >
+      <button onClick={openModal} className="rounded-xl px-4 py-2 mb-2 border border-black self-center">
+        Course Plan
+      </button>
 
-const TermSelector = ({courses}) => {
+      <Modal isOpen={isModalOpen} onClose={closeModal} selection={selection}>
+        {selected.length === 0 ?
+          (<p>There are no courses selected. You can click on a course to select it.</p>) :
+          (
+            selected.map(course =>
+              <div className='border-b'>
+                <div className='flex flex-row justify-between'>
+                  {course.split(",")[0] + " CS " + course.split(",")[1] + ": " + course.split(",")[2]}
+                </div>
+                <div>Meets {course.split(",")[3]}</div>
+              </div>
+            )
+          )}
+      </Modal>
+      <CourseList courses={courses} term={selection} selected={selected} toggleSelected={toggleSelected} conflicting={conflicting}/>
+    </div>
+  )
+
+};
+
+const TermSelector = ({ courses }) => {
 
 
   const [selection, setSelection] = useState(() => Object.keys(terms)[0]);
@@ -85,7 +87,7 @@ const TermSelector = ({courses}) => {
     <div className='flex flex-col items-center'>
       <MenuSelector selection={selection} setSelection={setSelection} />
       <Menu selection={selection} courses={courses} />
-      
+
     </div>
   );
 }
