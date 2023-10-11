@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useJsonQuery } from './utilities/fetch';
 import { useState } from 'react';
 import TermSelector from './components/TermSelector';
-
+import Dispatcher from './components/Dispatcher';
 const Main = () => {
   const [data, isLoading, error] = useJsonQuery('https://courses.cs.northwestern.edu/394/guides/data/cs-courses.php');
   if (error) return <h1>Error loading user data: {`${error}`}</h1>;
@@ -15,9 +15,8 @@ const Main = () => {
 
   
   return (
-    <div className="flex flex-1 flex-col items-center p-2">
-        <Banner title={data.title} />
-        <TermSelector courses={data.courses}/>
+    <div className="">
+        <Dispatcher title={data.title} courses={data.courses}/>
     </div>
   );
 };
