@@ -3,10 +3,10 @@ import { useNavigate } from 'react-router-dom';
 
 const validateUserData = (key, val) => {
   switch (key) {
-    case 'firstName': case 'lastName':
+    case 'courseTitle':
       return /(^\w\w)/.test(val) ? '' : 'must be least two characters';
-    case 'email':
-      return /^\w+@\w+[.]\w+/.test(val) ? '' : 'must contain name@domain.top-level-domain';
+    case 'meetingTime':
+      return /^(M|Tu|W|Th|F)(?:(?<=, )|(?! ))?(M|Tu|W|Th|F)?(?:(?<=, )|(?! ))?(M|Tu|W|Th|F)? \d{1,2}:\d{2}-\d{1,2}:\d{2}$/.test(val) ? '' : 'Must be in the form DD HH:MM-HH:MM';
     default: return '';
   }
 };
@@ -16,7 +16,7 @@ const InputField = ({name, text, state, change}) => (
     <label htmlFor={name} className="form-label">{text}</label>
     <input className="form-control" id={name} name={name} 
       defaultValue={state.values?.[name]} onChange={change} />
-    <div className="invalid-feedback">{state.errors?.[name]}</div>
+    <div className="text-red-400">{state.errors?.[name]}</div>
   </div>
 );
 
@@ -39,11 +39,10 @@ const EditCourse = ({user}) => {
     }
   };
 
-  return (
+  return ( 
     <form onSubmit={submit} noValidate className={state.errors ? 'was-validated' : null}>
-      <InputField name="firstName" text="First Name" state={state} change={change} />
-      <InputField name="lastName" text="Last Name" state={state} change={change} />
-      <InputField name="email" text="Email" state={state} change={change} />
+      <InputField name="courseTitle" text="Course Title" state={state} change={change} />
+      <InputField name="meetingTime" text="Meeting Time" state={state} change={change} />
       <ButtonBar/>
     </form>
   )
