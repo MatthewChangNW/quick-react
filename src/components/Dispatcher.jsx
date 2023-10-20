@@ -2,7 +2,16 @@ import React from 'react'
 import Banner from './Banner'
 import TermSelector from './TermSelector'
 import EditCourse from './EditCourse'
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useParams } from "react-router-dom";
+
+const CourseWithId = ({courses}) => {
+  const { courseId } = useParams();
+  const key = courseId.split(";")[0][0] + courseId.split(";")[1]
+  const course = courses[key];
+  return (
+    <EditCourse course={course} courseId={key} />
+  )
+}
 
 function Dispatcher({title, courses}) {
   return (
@@ -15,7 +24,7 @@ function Dispatcher({title, courses}) {
                     </div>
                 } />
         <Route path="/editCourse/:courseId" element={
-            <EditCourse courses={courses} />} />
+            <CourseWithId courses={courses} />} />
     </Routes>
   </BrowserRouter>
   )
