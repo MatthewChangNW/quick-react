@@ -26,7 +26,7 @@ const MenuSelector = ({ selection, setSelection }) => (
   </div>
 );
 
-const Menu = ({ selection, courses }) => {
+const Menu = ({ selection, courses, signedIn }) => {
   const [selected, setSelected] = useState([]);
   const [conflicting, setConflicting] = useState([]);
 
@@ -72,21 +72,20 @@ const Menu = ({ selection, courses }) => {
             )
           )}
       </Modal>
-      <CourseList courses={courses} term={selection} selected={selected} toggleSelected={toggleSelected} conflicting={conflicting}/>
+      <CourseList courses={courses} term={selection} selected={selected} toggleSelected={toggleSelected} conflicting={conflicting} signedIn={signedIn}/>
     </div>
   )
 
 };
 
-const TermSelector = ({ courses }) => {
+const TermSelector = ({ courses, signedIn }) => {
 
 
   const [selection, setSelection] = useState(() => Object.keys(terms)[0]);
-
   return (
     <div className='flex flex-col items-center'>
       <MenuSelector selection={selection} setSelection={setSelection} />
-      <Menu selection={selection} courses={courses} />
+      <Menu selection={selection} courses={courses} signedIn={signedIn} />
 
     </div>
   );

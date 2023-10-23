@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-const CourseCard = ({ course, selected, toggleSelected, conflicting }) => {
+const CourseCard = ({ course, selected, toggleSelected, conflicting, signedIn }) => {
   let key = course.term + ";" + String(course.number) + ";" + course.title + ";" + course.meets
 
   return (
@@ -23,7 +23,7 @@ const CourseCard = ({ course, selected, toggleSelected, conflicting }) => {
             <div>
               <div className='flex-row justify-between'>
                 <div className='text-xl'>{course.term} CS {course.number}</div>
-                <Link to={`/editCourse/${key}`} className='py-2'>Edit</Link>
+                {signedIn && <Link to={`/editCourse/${key}`} className='py-2'>Edit</Link>}
               </div>
               <div className='py-2'>{course.title}</div>
             </div>
