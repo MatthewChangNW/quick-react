@@ -3,7 +3,7 @@ import Banner from './Banner'
 import TermSelector from './TermSelector'
 import EditCourse from './EditCourse'
 import { BrowserRouter, Routes, Route, useParams } from "react-router-dom";
-
+import { useProfile } from '../utilities/profile';
 const CourseWithId = ({courses}) => {
   const { courseId } = useParams();
   const key = courseId.split(";")[0][0] + courseId.split(";")[1]
@@ -36,7 +36,8 @@ const AuthButton = ({user, setSignedIn}) => {
 function Dispatcher({title, courses}) {
   const [user] = useAuthState();
   const [signedIn, setSignedIn] = useState(false);
-
+  const [profile, profileLoading, profileError] = useProfile();
+  console.log(profile)
   return (
   <BrowserRouter>
     <Routes>
@@ -46,7 +47,7 @@ function Dispatcher({title, courses}) {
                         <div className='border border-black rounded-md px-2'>
                           <AuthButton user={user} setSignedIn={setSignedIn} />
                         </div>
-                        <TermSelector courses={courses} signedIn={signedIn}/>
+                        <TermSelector courses={courses} signedIn={profile.isAdmin}/>
                         
                     </div>
                 } />
