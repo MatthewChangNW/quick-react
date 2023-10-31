@@ -4,10 +4,10 @@ const CourseCard = ({ course, selected, toggleSelected, conflicting, signedIn })
   let key = course.term + ";" + String(course.number) + ";" + course.title + ";" + course.meets
 
   return (
-    <div>
+    <div data-cy="course">
       {
         conflicting.includes(key) ? (
-          <div className='flex flex-col border w-48 p-4 rounded-md justify-between border-red-600' key={key} >
+          <div className='flex flex-col border w-48 p-4 rounded-md justify-between border-red-600' key={key}>
             <div>
               <div className='flex-row justify-between'>
                 <div className='text-xl'>{course.term} CS {course.number}</div>

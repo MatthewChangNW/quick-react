@@ -24,6 +24,19 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
+
+if (!globalThis.EMULATION && import.meta.env.MODE === 'development') {
+  connectAuthEmulator(auth, "http://127.0.0.1:9099");
+  connectDatabaseEmulator(database, "127.0.0.1", 9000);
+
+  signInWithCredential(auth, GoogleAuthProvider.credential(
+    '{"sub": "5WTtL1OTCVZT2y4wAZOnuCKxwkry", "email": "mattchang9@gmail.com", "displayName":"Matthew Chang", "email_verified": true}'
+  ));
+  
+  // set flag to avoid connecting twice, e.g., because of an editor hot-reload
+  globalThis.EMULATION = true;
+}
+
 export { database }
 
 export const useDbData = (path) => {
